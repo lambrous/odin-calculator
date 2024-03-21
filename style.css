@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap");
+
 *,
 *::before,
 *::after {
@@ -9,7 +11,13 @@
 }
 
 body {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Spline Sans Mono", monospace;
+  background-color: #f1e1f0;
+  color: #292524bb;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 input,
@@ -17,4 +25,59 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+.calculator {
+  /* height: 700px; */
+  border: 4px solid#d6c8d5;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.display {
+  border-bottom: 4px solid#d6c8d5;
+  padding: 1.5rem 1rem;
+  text-align: right;
+}
+
+.input {
+  font-size: 2.5rem;
+  color: hsla(92, 20%, 13%, 0.887);
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 4px;
+  background-color: #d6c8d5;
+}
+
+button {
+  color: inherit;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  width: 80px;
+  font-size: 1.5rem;
+  background-color: #f1e1f0;
+  border: none;
+}
+
+button:active {
+  background-color: hsla(302, 21%, 77%, 0.623);
+}
+
+.equals {
+  grid-row: 4 / 6;
+  grid-column: 4;
+  aspect-ratio: initial;
+  background-color: inherit;
+  border: none;
+}
+
+button[data-digit="0"] {
+  grid-row: 5;
+  grid-column: span 2;
+  aspect-ratio: initial;
+  width: 100%;
 }

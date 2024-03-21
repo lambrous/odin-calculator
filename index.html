@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator | The Odin Project</title>
 
-    <link rel="stylesheet" href="./style.css" />
-    <script defer src="./script.js"></script>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator | The Odin Project</title>
 
-  <body>
-    <div class="calculator">
-      <div class="display">
-        <p class="input">
-          <span class="first-number">0</span>
-          <span class="operand"></span>
-          <span class="second-number"></span>
-        </p>
-      </div>
-      <div class="buttons">
-        <button class="clear">C</button>
-        <button class="operator" data-operator="divide">&divide;</button>
-        <button class="operator" data-operator="times">&times;</button>
-        <button class="delete">&#x232B;</button>
+  <link rel="stylesheet" href="./style.css" />
+  <script defer src="./script.js"></script>
+</head>
 
-        <button class="digit" data-digit="7">7</button>
-        <button class="digit" data-digit="8">8</button>
-        <button class="digit" data-digit="9">9</button>
-        <button class="operator" data-operator="minus">&minus;</button>
-
-        <button class="digit" data-digit="4">4</button>
-        <button class="digit" data-digit="5">5</button>
-        <button class="digit" data-digit="6">6</button>
-        <button class="operator" data-operator="plus">&plus;</button>
-
-        <button class="digit" data-digit="1">1</button>
-        <button class="digit" data-digit="2">2</button>
-        <button class="digit" data-digit="3">3</button>
-
-        <button class="digit" data-digit="0">0</button>
-        <button class="digit decimal" data-digit=".">.</button>
-
-        <button class="equals">&equals;</button>
-      </div>
+<body>
+  <div class="calculator">
+    <div class="display">
+      <p class="accumulated">
+        <span class="recent-num"></span>
+        <span class="operator"></span>
+      </p>
+      <p class="input">0</p>
     </div>
-  </body>
+    <div class="buttons">
+      <button class="clear">C</button>
+      <button class="operator" data-operator="divide">&divide;</button>
+      <button class="operator" data-operator="times">&times;</button>
+      <button class="delete">&#x232B;</button>
+
+      <button class="digit" data-digit="7">7</button>
+      <button class="digit" data-digit="8">8</button>
+      <button class="digit" data-digit="9">9</button>
+      <button class="operator" data-operator="minus">&minus;</button>
+
+      <button class="digit" data-digit="4">4</button>
+      <button class="digit" data-digit="5">5</button>
+      <button class="digit" data-digit="6">6</button>
+      <button class="operator" data-operator="plus">&plus;</button>
+
+      <button class="digit" data-digit="1">1</button>
+      <button class="digit" data-digit="2">2</button>
+      <button class="digit" data-digit="3">3</button>
+
+      <button class="digit" data-digit="0">0</button>
+      <button class="digit decimal" data-digit=".">.</button>
+
+      <button class="equals">&equals;</button>
+    </div>
+  </div>
+</body>
+
 </html>

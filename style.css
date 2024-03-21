@@ -32,17 +32,37 @@ select {
   border: 4px solid#d6c8d5;
   border-radius: 15px;
   overflow: hidden;
+  max-width: 340px;
 }
 
 .display {
   border-bottom: 4px solid#d6c8d5;
   padding: 1.5rem 1rem;
   text-align: right;
+  height: 130px;
+  /* 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem; */
+}
+
+.accumulated {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.accumulated:empty {
+  content: "\00a0";
 }
 
 .input {
   font-size: 2.5rem;
   color: hsla(92, 20%, 13%, 0.887);
+}
+
+.input:empty {
+  content: "\00a0";
 }
 
 .buttons {

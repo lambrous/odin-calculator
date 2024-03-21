@@ -20,7 +20,7 @@ function operate(num1, num2, operator) {
 	}
 }
 
-let canInput = false;
+let hasResult = true;
 
 const elNumInput = document.querySelector(".input");
 const elAccumulatedNum = document.querySelector(".recent-num");
@@ -29,23 +29,49 @@ const btnsDigit = document.querySelectorAll(".digit");
 const btnsOperator = document.querySelectorAll(".operator");
 const btnEqual = document.querySelector(".equals");
 const btnClear = document.querySelector(".clear");
+const btnDecimal = document.querySelector(".decimal");
+const btnZero = document.querySelector(".zero");
 
-for (btn of btnsDigit) btn.addEventListener("click", showDigit);
+for (btn of btnsDigit) btn.addEventListener("click", handleDigitClick);
 for (btn of btnsOperator) btn.addEventListener("click", updateEquation);
 btnEqual.addEventListener("click", showResult);
 btnClear.addEventListener("click", reset);
+btnDecimal.addEventListener("click", handleDecimalClick);
+btnZero.addEventListener("click", handleZeroClick);
 
-function showDigit() {
-	if (!canInput) {
+function handleDigitClick() {
+	if (elNumInput.textContent[0] === "0" && elNumInput.textContent[1] !== ".") {
 		clearInputEl();
-		canInput = true;
+	}
+	showDigit(this);
+}
+
+function handleDecimalClick() {
+	if (!elNumInput.textContent.includes(".")) {
+		showDigit(this);
+		if (elNumInput.textContent === ".") {
+			elNumInput.textContent = "0.";
+		}
+	}
+}
+
+function handleZeroClick() {
+	if (elNumInput.textContent[0] !== "0") showDigit(this);
+}
+
+function showDigit(btn) {
+	if (hasResult) {
+		clearInputEl();
+		hasResult = false;
 	}
 
-	const digit = this.dataset.digit;
+	const digit = btn.dataset.digit;
 	elNumInput.textContent += digit;
 }
 
 function updateEquation() {
+	if (firstNum === null && isInputEmpty()) return;
+
 	if (firstNum !== null) {
 		secondNum = +elNumInput.textContent;
 		firstNum = operate(firstNum, secondNum, operator);
@@ -65,7 +91,7 @@ function showResult() {
 		elNumInput.textContent = operate(firstNum, secondNum, operator);
 		clearEquationEl();
 		resetValues();
-		canInput = false;
+		hasResult = true;
 	}
 }
 
@@ -103,8 +129,8 @@ function reset() {
 	clearInputEl();
 	clearEquationEl();
 	resetValues();
-	elNumInput.textContent = 0;
-	canInput = false;
+	elNumInput.textContent = "0";
+	hasResult = true;
 }
 
 function isInputEmpty() {

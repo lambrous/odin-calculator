@@ -49,9 +49,8 @@ function handleDigitClick() {
 function handleDecimalClick() {
 	if (!elNumInput.textContent.includes(".")) {
 		showDigit(this);
-		if (elNumInput.textContent === ".") {
-			elNumInput.textContent = "0.";
-		}
+		if (elNumInput.textContent === ".") elNumInput.textContent = "0.";
+		else if (elNumInput.textContent === "-.") elNumInput.textContent = "-0.";
 	}
 }
 
@@ -70,14 +69,22 @@ function showDigit(btn) {
 }
 
 function updateEquation() {
-	if (firstNum === null && isInputEmpty()) return;
+	const selectedOperator = this.dataset.operator;
+
+	if (selectedOperator === "minus" && isInputEmpty()) {
+		hasResult = false;
+		elNumInput.textContent = "-";
+		return;
+	}
+
+	if (isInputEmpty()) return;
 
 	if (firstNum !== null) {
 		secondNum = +elNumInput.textContent;
 		firstNum = operate(firstNum, secondNum, operator);
-		operator = this.dataset.operator;
+		operator = selectedOperator;
 	} else {
-		operator = this.dataset.operator;
+		operator = selectedOperator;
 		firstNum = +elNumInput.textContent;
 	}
 
@@ -134,5 +141,6 @@ function reset() {
 }
 
 function isInputEmpty() {
-	return elNumInput.textContent === "";
+	const emptyValues = ["", "-", "0.", "-0."];
+	return emptyValues.includes(elNumInput.textContent);
 }

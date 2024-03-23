@@ -1,27 +1,3 @@
-const add = (a, b) => a + b;
-const subtract = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => a / b;
-
-let firstNum = null;
-let secondNum = null;
-let operator = null;
-
-function operate(num1, num2, operator) {
-	switch (operator) {
-		case "plus":
-			return add(num1, num2);
-		case "minus":
-			return subtract(num1, num2);
-		case "times":
-			return multiply(num1, num2);
-		case "divide":
-			return divide(num1, num2);
-	}
-}
-
-let hasResult = true;
-
 const elNumInput = document.querySelector(".input");
 const elAccumulatedNum = document.querySelector(".recent-num");
 const elOperator = document.querySelector(".operator");
@@ -32,75 +8,18 @@ const btnClear = document.querySelector(".clear");
 const btnDecimal = document.querySelector(".decimal");
 const btnZero = document.querySelector(".zero");
 
-for (btn of btnsDigit) btn.addEventListener("click", handleDigitClick);
-for (btn of btnsOperator) btn.addEventListener("click", updateEquation);
-btnEqual.addEventListener("click", showResult);
-btnClear.addEventListener("click", reset);
-btnDecimal.addEventListener("click", handleDecimalClick);
-btnZero.addEventListener("click", handleZeroClick);
+let firstNum = null;
+let secondNum = null;
+let operator = null;
+let hasResult = true;
+let inputValue = elNumInput.textContent;
 
-function handleDigitClick() {
-	if (elNumInput.textContent[0] === "0" && elNumInput.textContent[1] !== ".") {
-		clearInputEl();
-	}
-	showDigit(this);
-}
-
-function handleDecimalClick() {
-	if (!elNumInput.textContent.includes(".")) {
-		showDigit(this);
-		if (elNumInput.textContent === ".") elNumInput.textContent = "0.";
-		else if (elNumInput.textContent === "-.") elNumInput.textContent = "-0.";
-	}
-}
-
-function handleZeroClick() {
-	if (elNumInput.textContent[0] !== "0") showDigit(this);
-}
-
-function showDigit(btn) {
-	if (hasResult) {
-		clearInputEl();
-		hasResult = false;
-	}
-
-	const digit = btn.dataset.digit;
-	elNumInput.textContent += digit;
-}
-
-function updateEquation() {
-	const selectedOperator = this.dataset.operator;
-
-	if (selectedOperator === "minus" && isInputEmpty()) {
-		hasResult = false;
-		elNumInput.textContent = "-";
-		return;
-	}
-
-	if (isInputEmpty()) return;
-
-	if (firstNum !== null) {
-		secondNum = +elNumInput.textContent;
-		firstNum = operate(firstNum, secondNum, operator);
-		operator = selectedOperator;
-	} else {
-		operator = selectedOperator;
-		firstNum = +elNumInput.textContent;
-	}
-
-	showEquation();
-	clearInputEl();
-}
-
-function showResult() {
-	if (firstNum !== null && !isInputEmpty()) {
-		secondNum = +elNumInput.textContent;
-		elNumInput.textContent = operate(firstNum, secondNum, operator);
-		clearEquationEl();
-		resetValues();
-		hasResult = true;
-	}
-}
+const calculator = {
+	plus: (a, b) => a + b,
+	minus: (a, b) => a - b,
+	times: (a, b) => a * b,
+	divide: (a, b) => a / b,
+};
 
 function getSymbol(operator) {
 	const symbols = {
@@ -112,18 +31,23 @@ function getSymbol(operator) {
 	return symbols[operator] || "";
 }
 
-function showEquation() {
-	elAccumulatedNum.textContent = firstNum;
-	elOperator.textContent = getSymbol(operator);
+function concatInput(str) {
+	inputValue += str;
+	updateInputEl();
 }
 
-function clearInputEl() {
-	elNumInput.textContent = "";
+function clearInput(value = "") {
+	inputValue = String(value);
+	updateInputEl();
 }
 
-function clearEquationEl() {
-	elAccumulatedNum.textContent = "";
-	elOperator.textContent = "";
+function updateInputEl() {
+	elNumInput.textContent = `${inputValue}`;
+}
+
+function isInputEmpty() {
+	const emptyValues = ["", "-", "0.", "-0."];
+	return emptyValues.includes(inputValue);
 }
 
 function resetValues() {
@@ -132,15 +56,89 @@ function resetValues() {
 	operator = null;
 }
 
-function reset() {
-	clearInputEl();
+function showDigit(btn) {
+	if (hasResult) {
+		clearInput();
+		hasResult = false;
+	}
+
+	const { digit } = btn.dataset;
+	concatInput(digit);
+}
+
+function showEquation() {
+	elAccumulatedNum.textContent = firstNum;
+	elOperator.textContent = getSymbol(operator);
+}
+
+function clearEquationEl() {
+	elAccumulatedNum.textContent = "";
+	elOperator.textContent = "";
+}
+
+function handleClear() {
 	clearEquationEl();
 	resetValues();
-	elNumInput.textContent = "0";
+	clearInput(0);
 	hasResult = true;
 }
 
-function isInputEmpty() {
-	const emptyValues = ["", "-", "0.", "-0."];
-	return emptyValues.includes(elNumInput.textContent);
+function handleDigit() {
+	if (inputValue.startsWith("0") && inputValue[1] !== ".") {
+		clearInput();
+	}
+	showDigit(this);
 }
+
+function handleDecimal() {
+	if (!inputValue.includes(".")) {
+		showDigit(this);
+		if (inputValue === ".") clearInput("0.");
+		else if (inputValue === "-.") clearInput("-0.");
+	}
+}
+
+function handleZero() {
+	if (inputValue !== "0" && inputValue !== "-0") showDigit(this);
+}
+
+function handleOperation() {
+	const selectedOperator = this.dataset.operator;
+
+	if (isInputEmpty()) {
+		if (selectedOperator === "minus") {
+			hasResult = false;
+			clearInput("-");
+		}
+		return;
+	}
+
+	if (firstNum !== null) {
+		secondNum = +inputValue;
+		firstNum = calculator[operator](firstNum, secondNum);
+		operator = selectedOperator;
+	} else {
+		operator = selectedOperator;
+		firstNum = +inputValue;
+	}
+
+	showEquation();
+	clearInput();
+}
+
+function handleResult() {
+	if (firstNum !== null && !isInputEmpty()) {
+		secondNum = +inputValue;
+		clearInput(calculator[operator](firstNum, secondNum));
+		clearEquationEl();
+		resetValues();
+		hasResult = true;
+	}
+}
+
+for (btn of btnsDigit) btn.addEventListener("click", handleDigit);
+for (btn of btnsOperator) btn.addEventListener("click", handleOperation);
+btnEqual.addEventListener("click", handleResult);
+btnClear.addEventListener("click", handleClear);
+btnDecimal.addEventListener("click", handleDecimal);
+btnZero.addEventListener("click", handleZero);

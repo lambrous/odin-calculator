@@ -16,18 +16,18 @@ let hasResult = true;
 let inputValue = elNumInput.textContent;
 
 const calculator = {
-	plus: (a, b) => a + b,
-	minus: (a, b) => a - b,
-	times: (a, b) => a * b,
-	divide: (a, b) => a / b,
+	"+": (a, b) => a + b,
+	"-": (a, b) => a - b,
+	"*": (a, b) => a * b,
+	"/": (a, b) => a / b,
 };
 
 function getSymbol(operator) {
 	const symbols = {
-		plus: "+",
-		minus: "−",
-		times: "×",
-		divide: "÷",
+		"+": "+",
+		"-": "−",
+		"*": "×",
+		"/": "÷",
 	};
 	return symbols[operator] || "";
 }
@@ -107,7 +107,7 @@ function handleOperation() {
 	const selectedOperator = this.dataset.operator;
 
 	if (isInputEmpty()) {
-		if (selectedOperator === "minus") {
+		if (selectedOperator === "-") {
 			hasResult = false;
 			replaceInput("-");
 		}
@@ -146,6 +146,18 @@ function handleBackspace() {
 	}
 }
 
+function handleKeys(event) {
+	const key = event.key || event.keyCode;
+
+	if ((key >= "0" && key <= "9") || key === ".")
+		document.querySelector(`button[data-digit="${key}"`).click();
+	else if (["+", "-", "*", "/"].includes(key))
+		document.querySelector(`button[data-operator="${key}"`).click();
+	else if (key === "Backspace") handleBackspace();
+	else if (key === "Enter" || key === "=") handleResult();
+	else if (key === "Delete") handleClear();
+}
+
 for (btn of btnsDigit) btn.addEventListener("click", handleDigit);
 for (btn of btnsOperator) btn.addEventListener("click", handleOperation);
 btnEqual.addEventListener("click", handleResult);
@@ -153,3 +165,4 @@ btnClear.addEventListener("click", handleClear);
 btnDecimal.addEventListener("click", handleDecimal);
 btnZero.addEventListener("click", handleZero);
 btnBackspace.addEventListener("click", handleBackspace);
+document.addEventListener("keydown", handleKeys);

@@ -7,6 +7,7 @@ const btnEqual = document.querySelector(".equals");
 const btnClear = document.querySelector(".clear");
 const btnDecimal = document.querySelector(".decimal");
 const btnZero = document.querySelector(".zero");
+const btnBackspace = document.querySelector(".delete");
 
 let firstNum = null;
 let secondNum = null;
@@ -36,7 +37,7 @@ function concatInput(str) {
 	updateInputEl();
 }
 
-function clearInput(value = "") {
+function replaceInput(value = "") {
 	inputValue = String(value);
 	updateInputEl();
 }
@@ -54,11 +55,12 @@ function resetValues() {
 	firstNum = null;
 	secondNum = null;
 	operator = null;
+	hasResult = true;
 }
 
 function showDigit(btn) {
 	if (hasResult) {
-		clearInput();
+		replaceInput();
 		hasResult = false;
 	}
 
@@ -79,13 +81,12 @@ function clearEquationEl() {
 function handleClear() {
 	clearEquationEl();
 	resetValues();
-	clearInput(0);
-	hasResult = true;
+	replaceInput(0);
 }
 
 function handleDigit() {
 	if (inputValue.startsWith("0") && inputValue[1] !== ".") {
-		clearInput();
+		replaceInput();
 	}
 	showDigit(this);
 }
@@ -93,8 +94,8 @@ function handleDigit() {
 function handleDecimal() {
 	if (!inputValue.includes(".")) {
 		showDigit(this);
-		if (inputValue === ".") clearInput("0.");
-		else if (inputValue === "-.") clearInput("-0.");
+		if (inputValue === ".") replaceInput("0.");
+		else if (inputValue === "-.") replaceInput("-0.");
 	}
 }
 
@@ -108,7 +109,7 @@ function handleOperation() {
 	if (isInputEmpty()) {
 		if (selectedOperator === "minus") {
 			hasResult = false;
-			clearInput("-");
+			replaceInput("-");
 		}
 		return;
 	}
@@ -123,16 +124,25 @@ function handleOperation() {
 	}
 
 	showEquation();
-	clearInput();
+	replaceInput();
 }
 
 function handleResult() {
 	if (firstNum !== null && !isInputEmpty()) {
 		secondNum = +inputValue;
-		clearInput(calculator[operator](firstNum, secondNum));
+		replaceInput(calculator[operator](firstNum, secondNum));
 		clearEquationEl();
 		resetValues();
-		hasResult = true;
+	}
+}
+
+function handleBackspace() {
+	if (inputValue !== "" && !hasResult) {
+		replaceInput(inputValue.slice(0, -1));
+	} else if (inputValue === "" && firstNum !== null) {
+		replaceInput(firstNum);
+		clearEquationEl();
+		resetValues();
 	}
 }
 
@@ -142,3 +152,4 @@ btnEqual.addEventListener("click", handleResult);
 btnClear.addEventListener("click", handleClear);
 btnDecimal.addEventListener("click", handleDecimal);
 btnZero.addEventListener("click", handleZero);
+btnBackspace.addEventListener("click", handleBackspace);

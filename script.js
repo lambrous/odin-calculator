@@ -11,16 +11,24 @@ const btnBackspace = document.querySelector(".delete");
 
 let firstNum = null;
 let secondNum = null;
-let operator = null;
+let currentOperator = null;
 let hasResult = true;
 let inputValue = elNumInput.textContent;
 
-const calculator = {
-	"+": (a, b) => a + b,
-	"-": (a, b) => a - b,
-	"*": (a, b) => a * b,
-	"/": (a, b) => a / b,
-};
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => a / b;
+
+function operate(n1 = firstNum, n2 = secondNum, operator = currentOperator) {
+	const operation = {
+		"+": add(n1, n2),
+		"-": subtract(n1, n2),
+		"*": multiply(n1, n2),
+		"/": divide(n1, n2),
+	};
+	return operation[operator];
+}
 
 function getSymbol(operator) {
 	const symbols = {
@@ -54,7 +62,7 @@ function isInputEmpty() {
 function resetValues() {
 	firstNum = null;
 	secondNum = null;
-	operator = null;
+	currentOperator = null;
 	hasResult = true;
 }
 
@@ -70,7 +78,7 @@ function showDigit(btn) {
 
 function showEquation() {
 	elAccumulatedNum.textContent = firstNum;
-	elOperator.textContent = getSymbol(operator);
+	elOperator.textContent = getSymbol(currentOperator);
 }
 
 function clearEquationEl() {
@@ -116,10 +124,10 @@ function handleOperation() {
 
 	if (firstNum !== null) {
 		secondNum = +inputValue;
-		firstNum = calculator[operator](firstNum, secondNum);
-		operator = selectedOperator;
+		firstNum = operate();
+		currentOperator = selectedOperator;
 	} else {
-		operator = selectedOperator;
+		currentOperator = selectedOperator;
 		firstNum = +inputValue;
 	}
 
@@ -130,7 +138,7 @@ function handleOperation() {
 function handleResult() {
 	if (firstNum !== null && !isInputEmpty()) {
 		secondNum = +inputValue;
-		replaceInput(calculator[operator](firstNum, secondNum));
+		replaceInput(operate());
 		clearEquationEl();
 		resetValues();
 	}

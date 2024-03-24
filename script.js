@@ -54,11 +54,9 @@ function replaceInput(value = "") {
 
 function updateInputEl() {
 	elNumInput.textContent = `${inputValue}`;
-	if (inputValue.length > 14) {
-		elNumInput.style.fontSize = `${2.5 * (14 / inputValue.length)}rem`;
-	} else {
-		elNumInput.style.fontSize = "2.5rem";
-	}
+	const fontSize =
+		inputValue.length > 12 ? `${2.5 * (12 / inputValue.length)}rem` : "2.5rem";
+	elNumInput.style.fontSize = fontSize;
 }
 
 function isInputEmpty() {

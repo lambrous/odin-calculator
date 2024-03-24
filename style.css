@@ -83,7 +83,8 @@ button {
   border: none;
 }
 
-button:active {
+button:active,
+button.active {
   background-color: hsla(302, 21%, 77%, 0.623);
 }
 

@@ -154,16 +154,44 @@ function handleBackspace() {
 	}
 }
 
-function handleKeys(event) {
-	const key = event.key || event.keyCode;
+function toggleActiveStyle(el, add) {
+	if (add) {
+		el.classList.add("active");
+	} else {
+		el.classList.remove("active");
+	}
+}
 
-	if ((key >= "0" && key <= "9") || key === ".")
-		document.querySelector(`button[data-digit="${key}"`).click();
-	else if (["+", "-", "*", "/"].includes(key))
-		document.querySelector(`button[data-operator="${key}"`).click();
-	else if (key === "Backspace") handleBackspace();
-	else if (key === "Enter" || key === "=") handleResult();
-	else if (key === "Delete") handleClear();
+function handleKeys(event, addStyle) {
+	const key = event.key || event.keyCode;
+	let btn;
+
+	if ((key >= "0" && key <= "9") || key === ".") {
+		btn = document.querySelector(`button[data-digit="${key}"`);
+	} else if (["+", "-", "*", "/"].includes(key)) {
+		btn = document.querySelector(`button[data-operator="${key}"`);
+	} else if (key === "Backspace") {
+		btn = btnBackspace;
+	} else if (key === "Enter" || key === "=") {
+		btn = btnEqual;
+	} else if (key === "Delete") {
+		btn = btnClear;
+	}
+
+	if (btn) {
+		toggleActiveStyle(btn, addStyle);
+		if (addStyle) {
+			btn.click();
+		}
+	}
+}
+
+function handleKeyDown(event) {
+	handleKeys(event, true);
+}
+
+function handleKeyUp(event) {
+	handleKeys(event, false);
 }
 
 for (btn of btnsDigit) btn.addEventListener("click", handleDigit);
@@ -173,4 +201,5 @@ btnClear.addEventListener("click", handleClear);
 btnDecimal.addEventListener("click", handleDecimal);
 btnZero.addEventListener("click", handleZero);
 btnBackspace.addEventListener("click", handleBackspace);
-document.addEventListener("keydown", handleKeys);
+document.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keyup", handleKeyUp);

@@ -40,9 +40,11 @@ function getSymbol(operator) {
 	return symbols[operator] || "";
 }
 
-function concatInput(str) {
-	inputValue += str;
-	updateInputEl();
+function concatInput(char) {
+	if (inputValue.length < 22) {
+		inputValue += char;
+		updateInputEl();
+	}
 }
 
 function replaceInput(value = "") {
@@ -52,6 +54,11 @@ function replaceInput(value = "") {
 
 function updateInputEl() {
 	elNumInput.textContent = `${inputValue}`;
+	if (inputValue.length > 14) {
+		elNumInput.style.fontSize = `${2.5 * (14 / inputValue.length)}rem`;
+	} else {
+		elNumInput.style.fontSize = "2.5rem";
+	}
 }
 
 function isInputEmpty() {
